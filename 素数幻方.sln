@@ -1,31 +1,201 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.7.34031.279
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Project57", "Project57\Project57.vcxproj", "{CC530DF7-A5DD-405A-A202-205B5AECD82A}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CC530DF7-A5DD-405A-A202-205B5AECD82A}.Debug|x64.ActiveCfg = Debug|x64
-		{CC530DF7-A5DD-405A-A202-205B5AECD82A}.Debug|x64.Build.0 = Debug|x64
-		{CC530DF7-A5DD-405A-A202-205B5AECD82A}.Debug|x86.ActiveCfg = Debug|Win32
-		{CC530DF7-A5DD-405A-A202-205B5AECD82A}.Debug|x86.Build.0 = Debug|Win32
-		{CC530DF7-A5DD-405A-A202-205B5AECD82A}.Release|x64.ActiveCfg = Release|x64
-		{CC530DF7-A5DD-405A-A202-205B5AECD82A}.Release|x64.Build.0 = Release|x64
-		{CC530DF7-A5DD-405A-A202-205B5AECD82A}.Release|x86.ActiveCfg = Release|Win32
-		{CC530DF7-A5DD-405A-A202-205B5AECD82A}.Release|x86.Build.0 = Release|Win32
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {88F91CDA-C677-4FED-BE2F-9377E76B2DC1}
-	EndGlobalSection
-EndGlobal
+﻿/*素数幻方
+ 求四阶的素数幻方。即在一个4*4的矩阵中，每一个格填入一个数字，使每一行、每一列和两条对角线上的四个数字所组成的四位数，均为可逆素数（改数逆序后仍是素数）。
+提示：这样的矩阵有很多。
+
+**输出提示信息："There are magic aquares with invertable primes as follow:\n"
+**输出格式要求："No.%d\n" "%6d"
+
+程序运行示例如下：
+There are magic aquares with invertable primes as follow:
+No.1
+     1     1     9     3
+     1     0     0     9
+     9     2     2     1
+     3     1     9     1
+No.2
+     1     1     9     3
+     1     0     2     1
+     9     0     2     9
+     3     9     1     1
+......*/
+#include <math.h>
+#include <stdio.h>
+int number[210][5];
+int select[110];
+int array[4][5];
+int count;
+int selecount;
+int larray[2][200];
+int lcount[2];
+main()
+{
+    int i, k, flag, cc = 0, i1, i4;
+    printf("There are magic aquares with invertable primes as follow:\n");
+    for (i = 1001; i < 9999; i += 2)
+    {
+        k = i / 1000;
+        if (k % 2 != 0 && k != 5 && num(i))
+        {
+            number[count][0] = i;
+            process(count++);
+            if (number[count - 1][2] % 2 != 0 && number[count - 1][3] % 2 != 0
+                && number[count - 1][2] != 5 && number[count - 1][3] != 5)
+                select[selecount++] = count - 1;
+        }
+    }
+    larray[0][lcount[0]++] = number[0][0] / 100;
+    larray[1][lcount[1]++] = number[0][0] / 10;
+    for (i = 1; i < count; i++)
+    {
+        if (larray[0][lcount[0] - 1] != number[i][0] / 100)
+            larray[0][lcount[0]++] = number[i][0] / 100;
+        if (larray[1][lcount[1] - 1] != number[i][0] / 10)
+            larray[1][lcount[1]++] = number[i][0] / 10;
+    }
+    for (i1 = 0; i1 < selecount; i1++)
+    {
+        array[0][0] = select[i1];
+        copy_num(0);
+        for (array[1][0] = 0; array[1][0] < count; array[1][0]++)
+        {
+            copy_num(1);
+            if (!comp_num(2))
+                continue;
+            for (array[2][0] = 0; array[2][0] < count; array[2][0]++)
+            {
+                copy_num(2);
+                if (!comp_num(3))
+                    continue;
+                for (i4 = 0; i4 < selecount; i4++)
+                {
+                    array[3][0] = select[i4];
+                    copy_num(3);
+                    for (flag = 1, i = 1; flag && i <= 4; i++)
+                        if (!find1(i)) flag = 0;
+                    if (flag && find2())
+                    {
+                        printf("No.%d\n", ++cc);
+                        p_array();
+                    }
+                }
+            }
+
+        }
+
+    }
+}
+num(int number)
+{
+    int j;
+    if (!ok(number)) return(0);
+    for (j = 0; number > 0; number /= 10)
+        j = j * 10 + number % 10;
+    if (!ok(j)) return(0);
+    return(1);
+}
+ok(int number)
+{
+    int i, j;
+    if (number % 2 == 0) return(0);
+    j = sqrt((double)number) + 1;
+    for (i = 3; i <= j; i += 2)
+        if (number % i == 0)return(0);
+    return(1);
+}
+process(int i)
+{
+    int j, num;
+    num = number[i][0];
+    for (j = 4; j >= 1; j--, num /= 10)
+        number[i][j] = num % 10;
+}
+copy_num(int i)
+{
+    int j;
+    for (j = 1; j <= 4; j++)
+        array[i][j] = number[array[i][0]][j];
+}
+comp_num(int n)
+{
+    static int ii;
+    static int jj;
+    int i, num, k, * p;
+    int* pcount;
+    switch (n)
+    {
+    case 2:
+        pcount = &lcount[0];
+        p = &ii;
+        break;
+    case 3:
+        pcount = &lcount[1];
+        p = &jj;
+        break;
+    default:
+        return(0);
+    }
+    for (i = 1; i <= 4; i++)
+    {
+        for (num = 0, k = 0; k < n; k++)
+            num = num * 10 + array[k][i];
+        if (num <= larray[n - 2][*p])
+            for (; *p >= 0 && num < larray[n - 2][*p]; (*p)--)
+                ;
+        else
+            for (; *p < *pcount && num > larray[n - 2][*p]; (*p)++);
+        if (*p < 0 || *p >= *pcount)
+        {
+            *p = 0;
+            return(0);
+        }
+        if (num != larray[n - 2][*p])
+            return(0);
+
+    }
+    return(1);
+}
+find1(int i)
+{
+    int num, j;
+    for (num = 0, j = 0; j < 4; j++)
+        num = num * 10 + array[j][i];
+    return (find0(num));
+}
+find2(void)
+{
+    int num1, num2, j, i;
+    for (num1 = 0, j = 0; j < 4; j++)
+        num1 = num1 * 10 + array[j][j + 1];
+    for (num2 = 0, j = 0, i = 4; j < 4; j++, i--)
+        num2 = num2 * 10 + array[j][i];
+    if (find0(num1))
+        return(find0(num2));
+    else return(0);
+}
+find0(int num)
+{
+    static int j;
+    if (num <= number[j][0])
+        for (; j >= 0 && num < number[j][0]; j--);
+    else
+        for (; j < count && num > number[j][0]; j++);
+    if (j < 0 || j >= count)
+    {
+        j = 0;
+        return(0);
+    }
+    if (num == number[j][0])
+        return(1);
+    else return(0);
+}
+p_array(void)
+{
+    int i, j;
+    for (i = 0; i < 4; i++)
+    {
+        for (j = 1; j <= 4; j++)
+            printf("%6d", array[i][j]);
+        printf("\n");
+
+    }
+}
