@@ -1,0 +1,30 @@
+按如下函数原型，采用梯形法编程实现(分成100个小梯形,再求这100个梯形面积的和)，在积分区间[a,b]内计算函数y1=∫10(1+x2)dx和y2=∫30x1+x2dx的定积分。其中，指向函数的指针变量f用于接收被积函数的入口地址。
+Integral(float (*f)(float), float a, float b);
+**输出格式要求："y1=%f\ny2=%f\n"
+#include <stdio.h>  
+  
+// 被积函数 y1 = ∫(1+x^2) dx  
+float f1(float x) {  
+    return 1 + x * x;  
+}  
+  
+// 被积函数 y2 = ∫x/(1+x^2) dx  
+float f2(float x) {  
+    return x / (1 + x * x);  
+}
+float Integral(float (*f)(float), float a, float b, int n) {  
+    float h = (b - a) / n; // 计算每个小梯形的宽度  
+    float sum = 0.5f * (f(a) + f(b)); // 第一个和最后一个点用于梯形面积的初始化  
+    for (int i = 1; i < n; i++) {  
+        float xi = a + i * h; // 当前小梯形的右端点  
+        sum += f(xi); // 累加中间点的函数值  
+    }  
+    return h * sum; // 返回梯形面积的和  
+}
+int main() {  
+    float y1 = Integral(f1, 0, 1, 100); // 计算 y1 的定积分  
+    float y2 = Integral(f2, 0, 3, 100);  // 计算 y2 的定积分  
+  
+    printf("y1=%f\ny2=%f\n", y1, y2);  
+    return 0;  
+}
