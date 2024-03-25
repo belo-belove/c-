@@ -1,0 +1,56 @@
+对输入的8个字符串(每个字符串长度不超过20)按照字典顺序进行排序并输出。不限定排序方法，不能使用goto语句。
+输入输出格式：
+输入：%s
+输出：%s\n
+
+输入：多个字符串用空格分隔
+输出：排序好的字符串，每行一个字符串，末尾有空行。
+
+输入输出样例：
+输入：
+diankuang liuxu sui fengwu qingbo taohua zhu shuiliu
+输出：
+diankuang
+fengwu
+liuxu
+qingbo
+shuiliu
+sui
+taohua
+zhu
+#include <stdio.h>  
+#include <stdlib.h>  
+#include <string.h>  
+  
+#define MAX_STRINGS 8  
+#define MAX_STRING_LENGTH 20  
+  
+// 比较函数，用于qsort  
+int compare_strings(const void *a, const void *b) {  
+    return strcmp(*(const char **)a, *(const char **)b);  
+}  
+  
+int main() {  
+    char strings[MAX_STRINGS][MAX_STRING_LENGTH + 1]; // 存储字符串的数组  
+    int i;  
+  
+    // 读取输入  
+    for (i = 0; i < MAX_STRINGS; ++i) {  
+        scanf("%s", strings[i]);  
+    }  
+  
+    // 对字符串数组进行排序  
+    qsort(strings, MAX_STRINGS, sizeof(strings[0]), compare_strings);  
+  
+    // 输出排序后的字符串  
+    for (i = 0; i < MAX_STRINGS; ++i) {  
+        printf("%s\n", strings[i]);  
+    }  
+  
+    // 输出末尾的空行  
+    printf("\n");  
+  
+    return 0;  
+}
+
+
