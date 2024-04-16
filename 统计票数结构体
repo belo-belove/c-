@@ -1,0 +1,86 @@
+编程统计候选人的得票数。设有3个候选人zhang、li、wang（候选人姓名不区分大小写），10个选民，选民每次输入一个得票的候选人的名字，若选民输错候选人姓名，则按废票处理。选民投票结束后程序自动显示各候选人的得票结果和废票信息。要求用结构体数组candidate表示3个候选人的姓名和得票结果。
+输入提示："Input vote %d:"
+输入用gets();;
+输出提示："Election results:\n"
+输出格式为："%8s:%d\n"，"Wrong election:%d\n"
+
+例如：
+Input vote 1:li
+Input vote 2:li
+Input vote 3:Zhang
+Input vote 4:WANG
+Input vote 5:zhang
+Input vote 6:Wang
+Input vote 7:Zhang
+Input vote 8:wan
+Input vote 9:li
+Input vote 10:lii
+Election results:
+      li:3
+   zhang:3
+    wang:2
+Wrong election:2
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_CANDIDATES 3
+#define MAX_NAME_LENGTH 20
+#define MAX_VOTERS 10
+
+// 候选人结构体
+struct Candidate {
+    char name[MAX_NAME_LENGTH];
+    int votes;
+};
+
+int main() {
+    // 初始化候选人信息
+    struct Candidate candidates[MAX_CANDIDATES] = {
+        {"zhang", 0},
+        {"li", 0},
+        {"wang", 0}
+    };
+
+    char vote[MAX_NAME_LENGTH];
+    int wrongVotes = 0;
+
+    // 接收选民的投票输入
+    printf("Input vote %d:", 1);
+    for (int i = 0; i < MAX_VOTERS; ++i) {
+        gets(vote);
+
+        // 转换投票为小写形式
+        for (int j = 0; vote[j] != '\0'; ++j) {
+            vote[j] = tolower(vote[j]);
+        }
+
+        int validVote = 0;
+        // 检查投票是否有效并统计票数
+        for (int j = 0; j < MAX_CANDIDATES; ++j) {
+            if (strcmp(vote, candidates[j].name) == 0) {
+                candidates[j].votes++;
+                validVote = 1;
+                break;
+            }
+        }
+
+        if (!validVote) {
+            wrongVotes++;
+        }
+
+        if (i < MAX_VOTERS - 1) {
+            printf("Input vote %d:", i + 2);
+        }
+    }
+
+    // 输出选举结果
+    printf("Election results:\n");
+    for (int i = 0; i < MAX_CANDIDATES; ++i) {
+        printf("%8s:%d\n", candidates[i].name, candidates[i].votes);
+    }
+    printf("Wrong election:%d\n", wrongVotes);
+
+    return 0;
+}
