@@ -1,0 +1,80 @@
+给定如下定义：
+ struct time_rec
+  {
+    int hours ;
+    int mins  ;
+    int secs  ;
+  } ;
+  struct time_rec current_time ; 
+写一个程序包含如下的函数，完成：
+(a) 输入current_time的值：
+void input_time(struct time_rec *current_time)
+(b) 将current_time增加1秒：
+void increment_time(struct time_rec *current_time)
+(c) 显示current_time的新值。
+void output_time(struct time_rec *current_time)
+
+**输入格式要求："%d%d%d" 提示信息："请输入当前时间（时 分 秒）："
+**输出格式要求："当前时间：%d时%d分%d秒！"
+
+程序运行示例：
+请输入当前时间（时 分 秒）：12 23 56
+当前时间：12时23分57秒！
+
+#include <stdio.h>  
+  
+struct time_rec {  
+    int hours;  
+    int mins;  
+    int secs;  
+};  
+  
+// 函数：输入时间  
+void input_time(struct time_rec *current_time) {  
+    printf("请输入当前时间（时 分 秒）：");  
+    scanf("%d %d %d", &current_time->hours, &current_time->mins, &current_time->secs);  
+}  
+  
+// 函数：增加时间1秒  
+void increment_time(struct time_rec *current_time) {  
+    current_time->secs++;  
+      
+    if (current_time->secs > 60) {  
+        current_time->secs = 0;  
+        current_time->mins++;  
+    }  
+      
+    if (current_time->mins > 60) {  
+        current_time->mins = 0;  
+        current_time->hours++;  
+    }  
+      
+    if (current_time->hours > 24) {  
+        current_time->hours = 0;  
+    }  
+}  
+  
+// 函数：显示时间  
+void output_time(struct time_rec *current_time) {  
+    printf("当前时间：%d时%d分%d秒！\n", current_time->hours, current_time->mins, current_time->secs);  
+}  
+  
+int main() {  
+    struct time_rec current_time;  
+      
+    // 输入时间  
+    input_time(&current_time);  
+      
+    // 显示原始时间（如果需要）  
+    printf("您输入的时间是：");  
+    output_time(&current_time);  
+      
+    // 增加1秒  
+    increment_time(&current_time);  
+      
+    // 显示增加1秒后的时间  
+    printf("增加1秒后的时间是：");  
+    output_time(&current_time);  
+      
+    return 0;  
+}
