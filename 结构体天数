@@ -1,0 +1,53 @@
+定义一个结构体变量（包括年、月、日）。计算该日在本年中是第几天？注意闰年问题。
+输出格式要求："\n%d月%d日是%d年的第%d天。"
+程序的运行示例如下：
+请输入日期（年，月，日）
+1990,2,14
+
+2月14日是1990年的第45天。
+
+#include <stdio.h>  
+
+
+
+// 定义一个日期结构体  
+typedef struct {
+    int year;
+    int month;
+    int day;
+} Date;
+
+// 判断是否是闰年  
+int isLeapYear(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+// 获取每个月的天数，考虑闰年  
+int getDaysInMonth(int month, int year) {
+    int daysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    if (month == 2 && isLeapYear(year)) {
+        return 29;
+    }
+    return daysInMonth[month - 1];
+}
+
+// 计算日期是该年的第几天  
+int getDayOfYear(Date date) {
+    int dayCount = 0;
+    for (int i = 1; i < date.month; i++) {
+        dayCount += getDaysInMonth(i, date.year);
+    }
+    dayCount += date.day;
+    return dayCount;
+}
+
+int main() {
+    Date date;
+    printf("请输入日期（年，月，日）\n");
+    scanf("%d,%d,%d", &date.year, &date.month, &date.day);
+
+    int dayOfYear = getDayOfYear(date);
+    printf("%d月%d日是%d年的第%d天。\n", date.month, date.day, date.year, dayOfYear);
+
+    return 0;
+}
